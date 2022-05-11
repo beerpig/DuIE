@@ -20,7 +20,7 @@ class DuIEDataset(Dataset):
     def __init__(self, args, json_path, tokenizer):
         examples = []
 
-        with open("./data/predicate2id.json", 'r', encoding='utf8') as fp:
+        with open("./data/weather_predicate2id.json", 'r', encoding='utf8') as fp:
             label_map = json.load(fp)
 
         with open(json_path, "r", encoding="utf-8") as fp:
@@ -53,16 +53,17 @@ class DuIEDataset(Dataset):
                 for spo_object in spo['object'].keys():
                     # assign relation label
                     if spo['predicate'] in label_map.keys():
+                        # print("simple relation")
                         # simple relation
                         label_subject = label_map[spo['predicate']]
-                        label_object = label_subject + 55
+                        label_object = label_subject + 8
                         subject_tokens = tokenizer.encode_plus(spo['subject'], add_special_tokens=False)["input_ids"]
                         object_tokens = tokenizer.encode_plus(spo['object']['@value'], add_special_tokens=False)[
                             "input_ids"]
                     else:
                         # complex relation
                         label_subject = label_map[spo['predicate'] + '_' + spo_object]
-                        label_object = label_subject + 55
+                        label_object = label_subject + 8
                         subject_tokens = tokenizer.encode_plus(spo['subject'], add_special_tokens=False)["input_ids"]
                         object_tokens = tokenizer.encode_plus(spo['object'][spo_object], add_special_tokens=False)[
                             "input_ids"]
@@ -97,8 +98,10 @@ class DuIEDataset(Dataset):
                                         labels[index + i + 1][1] = 1
                                     break
                     else:
+                        # print("-----------------", seq_len - object_tokens_len + 1)
                         for index in range(seq_len - object_tokens_len + 1):
                             if tokens[index:index + object_tokens_len] == object_tokens:
+                                # print("len(labels), index", len(labels), index)
                                 labels[index][label_object] = 1
                                 for i in range(object_tokens_len - 1):
                                     labels[index + i + 1][1] = 1

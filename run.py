@@ -94,7 +94,7 @@ def train(args, train_iter, model):
 def evaluate(args, eval_iter, model, mode):
     logger.info("***** Running Evalation *****")
 
-    with open("data/id2spo.json", 'r', encoding='utf8') as fp:
+    with open("data/weather_id2spo.json", 'r', encoding='utf8') as fp:
         id2spo = json.load(fp)
 
     probs_all = []
@@ -137,7 +137,7 @@ def evaluate(args, eval_iter, model, mode):
     write_prediction_results(formatted_outputs, predict_file_path)
 
     if mode == "eval":
-        precision, recall, f1 = get_precision_recall_f1("./data/duie_dev.json",
+        precision, recall, f1 = get_precision_recall_f1("./data/weather_RE_dev.json",
                                                         predict_file_path)
         return precision, recall, f1
     elif mode != "test":
@@ -156,7 +156,7 @@ def main():
         os.mkdir(args.output_dir)
 
     # Reads label_map.
-    with open("./data/predicate2id.json", 'r', encoding='utf8') as fp:
+    with open("./data/weather_predicate2id.json", 'r', encoding='utf8') as fp:
         label_map = json.load(fp)
     num_classes = (len(label_map.keys()) - 2) * 2 + 2
 
@@ -171,10 +171,10 @@ def main():
 
     # Dataset & Dataloader
     train_dataset = DuIEDataset(args,
-                                json_path="./data/duie_train.json",
+                                json_path="./data/weather_RE_train.json",
                                 tokenizer=tokenizer)
     eval_dataset = DuIEDataset(args,
-                               json_path="./data/duie_dev.json",
+                               json_path="./data/weather_RE_dev.json",
                                tokenizer=tokenizer)
     # eval_dataset, test_dataset = random_split(eval_dataset,
     #                                           [round(0.5 * len(eval_dataset)),

@@ -1,0 +1,11 @@
+python run.py \
+--max_len=400 \
+--model_name_or_path=pretrained_model \
+--per_gpu_train_batch_size=20 \
+--per_gpu_eval_batch_size=5 \
+--learning_rate=1e-5 \
+--linear_learning_rate=1e-2 \
+--num_train_epochs=100 \
+--output_dir="./output" \
+--weight_decay=0.01 \
+--early_stop=2

@@ -1,2 +1,6 @@
 /data/duie_sample.json
 /log/
+/*/__pycache__/
+*.bin
+.*
+*.pkl
