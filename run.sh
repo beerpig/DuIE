@@ -8,4 +8,4 @@ python run.py \
 --num_train_epochs=100 \
 --output_dir="./output" \
 --weight_decay=0.01 \
---early_stop=2
+--early_stop=12

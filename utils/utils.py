@@ -171,8 +171,8 @@ def decoding(example_all,
         # format predictions into example-style output
         formatted_instance = {}
         text_raw = example['text']
-        complex_relation_label = [8, 10, 26, 32, 46]
-        complex_relation_affi_label = [9, 11, 27, 28, 29, 33, 47]
+        complex_relation_label = [10, 26, 32, 46]
+        complex_relation_affi_label = [11, 27, 28, 29, 33, 47]
 
         # flatten predictions then retrival all valid subject id
         flatten_predictions = []
@@ -181,13 +181,14 @@ def decoding(example_all,
                 flatten_predictions.append(layer_2[0])
         subject_id_list = []
         for cls_label in list(set(flatten_predictions)):
-            if 1 < cls_label <= 56 and (cls_label + 55) in flatten_predictions:
+            if 1 < cls_label <= 9 and (cls_label + 8) in flatten_predictions:
                 subject_id_list.append(cls_label)
         subject_id_list = list(set(subject_id_list))
 
         # fetch all valid spo by subject id
         spo_list = []
         for id_ in subject_id_list:
+            print("id_:", id_)
             if id_ in complex_relation_affi_label:
                 continue  # do this in the next "else" branch
             if id_ not in complex_relation_label:
@@ -196,7 +197,7 @@ def decoding(example_all,
                                        predictions,
                                        offset_mapping)
                 objects = find_entity(text_raw,
-                                      id_ + 55,
+                                      id_ + 8,
                                       predictions,
                                       offset_mapping)
                 for subject_ in subjects:
@@ -215,7 +216,7 @@ def decoding(example_all,
                                        predictions,
                                        offset_mapping)
                 objects = find_entity(text_raw,
-                                      id_ + 55,
+                                      id_ + 8,
                                       predictions,
                                       offset_mapping)
                 for subject_ in subjects:
@@ -226,7 +227,7 @@ def decoding(example_all,
                             id_affi = id_ + 1
                             object_dict[id2spo['object_type'][id_affi].split(
                                 '_')[1]] = find_entity(text_raw,
-                                                       id_affi + 55,
+                                                       id_affi + 8,
                                                        predictions,
                                                        offset_mapping)[0]
                             object_type_dict[id2spo['object_type'][id_affi].split('_')[1]] = \
@@ -236,7 +237,7 @@ def decoding(example_all,
                                 if id_affi in subject_id_list:
                                     object_dict[id2spo['object_type'][id_affi].split('_')[1]] = \
                                         find_entity(text_raw,
-                                                    id_affi + 55,
+                                                    id_affi + 8,
                                                     predictions,
                                                     offset_mapping)[0]
                                     object_type_dict[id2spo['object_type'][id_affi].split('_')[1]] = \
